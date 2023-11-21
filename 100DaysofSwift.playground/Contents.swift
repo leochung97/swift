@@ -97,8 +97,6 @@ let employee2 = [
 // Dictionaries will warn you that the dictionary may not actually contain the data and express that the expression implcitly coerced a data type
 // The reason for this is that it doesn't want to return an error if there is no data but it will warn you that it is a possibility
 print(employee2["name"])
-print(employee2["job"])
-print(employee2["location"])
 print(employee2["name", default: "Unknown"])
 print(employee2["job", default: "Unknown"])
 print(employee2["location", default: "Unknown"])
@@ -296,4 +294,125 @@ func greetNicely(_ person: String, nicely: Bool = true) {
 }
 greetNicely("bitch", nicely: false)
 
-//
+// Variadic functions are functions that accept any number of parameters of the same type
+func variadicSquare(numbers: Int...) {
+    for num in numbers {
+        print("\(num) squared is \(num * num)")
+    }
+}
+variadicSquare(numbers: 1, 2, 3, 4, 5)
+
+enum PasswordError: Error {
+    case obvious
+}
+
+// Error Handling involves throw -> try
+func checkPassword(_ password: String) throws -> Bool {
+    if password == "password" {
+        throw PasswordError.obvious
+    }
+    return true
+}
+
+// Do starts a section of codce that might cause problems -> try is used before every function that might throw an error -> catch lets you handle errors
+do {
+    try checkPassword("password")
+    print("That password is good!")
+} catch {
+    print("You can't use that password")
+}
+
+// Note that all parameters passed into a Swift function are constants, so they caannot be changed. However, if you want, you can pass in one or more parameters as inout, which means they can be changed insdie your function, and those changes would reflect in the original value outside the function
+
+func doubleInPlace(number: inout Int) {
+    number *= 2
+}
+var myNum = 1
+doubleInPlace(number: &myNum)
+print(myNum)
+
+// Day 6 - Basic Closures
+// Swift lets you use functions like any other type -> you can create a function and assign it to a variable -> these are called closures
+let driving = {
+    print("I'm driving in my car")
+}
+driving()
+
+// Closures don't have a name or space to write any parameters -> you must pass them using in
+let drivingIn = { (place: String) -> String in
+    return "I'm driving in my car to \(place)"
+}
+drivingIn("London")
+let newMessage = drivingIn("NYC")
+
+// If you want to pass a closure into a function so that it can be run inside that function, you can specify the parameter type as () -> Void
+func travel(action: () -> Void) {
+    print("I'm getting ready to go")
+    action()
+    print("I've arrived")
+}
+travel(action: driving)
+
+// If the last parameter is a closure, Swift allows you to use special syntax called trailing closure syntax - rather than pass in your closure as a parameter, you pass it directly after the function inside braces
+travel() {
+    print("I'm driving in my car")
+}
+
+// You can also just get rid of the parentheses
+travel{
+    print("I'm driving in my car")
+}
+
+// A closure you pass into a function can also accept its own parameters
+func newTravel(action: (String) -> Void) {
+    print("I'm getting ready to go!!!")
+    action("London")
+    print("I have arrived!")
+}
+
+newTravel{(place: String) in
+    print("I'm going to \(place).")
+}
+
+// You can replace Void with any data type to enforce a data type the closure must return
+// You can also use shorthand \($0) for closures
+newTravel {
+    "I'm going to \($0) in my car"
+}
+
+// With multiple closures, you can accept numbered parameters shorthand ($0) / ($1)
+func newerTravel(action: (String, Int) -> String) {
+    print("I'm ready to go!")
+    let description = action("NYC", 60)
+    print(description)
+    print("I've arrived")
+}
+
+newerTravel {
+    "I'm going to \($0) at \($1) miles per hour"
+}
+
+// Similar to how you pass a closure to the function, you can get closures returned from a function too
+func newestTravel() -> (String) -> (Void) {
+    return {
+        print("I'm going to \($0)")
+    }
+}
+let newestResult = newestTravel()
+newestResult("Canada")
+
+// It's also technically allowable though not recommended to return the value directly
+let newestResult2 = newestTravel()("Ontario")
+
+// If you use any external values inside your closure, Swift will capture them
+// The values will modified even if they don't exist anymore
+func captureClosure() -> (String) -> (Void) {
+    var counter = 1
+    
+    return {
+        print("\(counter). I'm going to \($0)")
+        counter += 1
+    }
+}
+let captureResult = captureClosure()
+captureResult("NYC")
