@@ -216,3 +216,84 @@ if transport == .airplane || transport == .helicopter {
 } else {
     print("I'm going to hire a scooter now!")
 }
+
+// Day 4 - Loops
+let count = 1...10
+for number in count {
+    print("number is \(number)")
+}
+
+for _ in 1...5 {
+    print("play")
+}
+
+var number =  1
+while number <= 20 {
+    print(number)
+    number += 1
+}
+
+// You can also use a repeat loop but it's the same function as while loops with the cluase at the end
+// Because the condition comes at the end of the repeat loop, you will always execute the code block once whereas while loops will check first on whether to run the code block at all
+var newNumber = 1
+repeat {
+    print(newNumber)
+    newNumber += 1
+} while newNumber <= 10
+
+var countDown = 10
+while countDown >= 0 {
+    print(countDown)
+    countDown -= 1
+    
+    if countDown == 4 {
+        print("Early break")
+        break
+    } else if countDown % 3 == 0 {
+        continue
+    }
+}
+
+// You can skip loops using continue
+
+// Day 5 - Functions
+func printHelp() {
+    let message = """
+Welcome to MyApp!
+Run this app inside a directory of images and MyApp will resize them all into thumbnails
+"""
+    print(message)
+}
+printHelp()
+
+// You can have typing similar to python
+
+func square(number: Int) -> Int {
+    return number * number
+}
+let result = square(number: 8)
+print(result)
+
+// You can label arguments in Swift functions
+func sayHello(to name: String) {
+    print("Hello, \(name)")
+}
+sayHello(to: "Taylor")
+
+// You can also omit argument names altogether
+func greet(_ person: String) {
+    print("Hello, \(person)")
+}
+greet("Leo")
+
+// Similar to Python, you can set default paramters with = in the argument parameters
+func greetNicely(_ person: String, nicely: Bool = true) {
+    if nicely == true {
+        print("Hello, \(person)")
+    } else {
+        print("Fuck you, \(person)")
+    }
+}
+greetNicely("bitch", nicely: false)
+
+//
