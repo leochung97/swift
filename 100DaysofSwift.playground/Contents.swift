@@ -416,3 +416,6 @@ func captureClosure() -> (String) -> (Void) {
 }
 let captureResult = captureClosure()
 captureResult("NYC")
+captureResult("NYC")
+captureResult("NYC")
+
