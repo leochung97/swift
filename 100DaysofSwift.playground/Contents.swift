@@ -486,6 +486,8 @@ var person = Person(name: "Ed")
 person.makeAnonymous()
 print(person.name)
 
+// Day 9 - Access Control, Lazy Properties, and Static
+
 // Similar to Python, you can have an initializer in the struct that starts an object with certain properties
 struct User {
     var username: String
@@ -499,7 +501,7 @@ var user = User()
 user.username = "twostraws"
 print(user.username)
 
-// You can also use self to point to the isntance of the struct that is currently being used
+// You can also use self to point to the instance of the struct that is currently being used
 struct selfPerson {
     var name: String
     init(name: String) {
@@ -555,3 +557,96 @@ struct privatePerson {
 }
 let privateMan = privatePerson(id: "12345")
 privateMan.identify()
+
+// Day 10 - Classes
+// Classes are similar to structs but they have five important differences
+// 1. Classes never come with a memberwise initializer -> if you have properties in your class, you must ALWAYS create your own initializer
+class Dog {
+    var name: String
+    var breed: String
+    
+    init(name: String, breed: String) {
+        self.name = name
+        self.breed = breed
+    }
+    
+    func makeNoise() {
+        print("Bark")
+    }
+}
+
+var kami = Dog(name: "Kami", breed: "Yorkie")
+
+// 2. You can create classes based on an existing class - it will inherit all the properties and methods of the original class and can add its own on top
+// This is called class inheritance or subclassing (parent / super class vs. child class)
+class Poodle: Dog {
+    init(name: String) {
+        super.init(name: name, breed: "Poodle")
+    }
+    
+    override func makeNoise() {
+        print("Poodle Bark")
+    }
+}
+// Note that Swift always make you call super.init() from child classes just in case the parent class does some important work when it's created
+
+var poodleKami = Poodle(name: "Kami")
+print(poodleKami.name, poodleKami.breed)
+
+// Child classes can replace parent methods with their own methods - a process known as overriding
+// You must use override func rather than just func when overriding a method - it stops you from overriding a method by accident and you'll get an error if you try to override something that doesn't exist on the parent class
+print(kami.makeNoise(), poodleKami.makeNoise())
+
+// You can also prevent classes from being inherited with the final keyword - no other class can inherit from it -> no overriding methods -> they must use the class the way it was written
+final class finalDog {
+    var name: String
+    
+    init(name: String) {
+        self.name = name
+    }
+}
+
+// 3. When you copy a struct, both the original and the copy are different instances - changing one won't change the other
+// When you copy a class, both the original and the copy point to the same instance - changing one does change the other
+class Singer {
+    var name = "Taylor Swift"
+}
+var singer = Singer()
+print(singer.name)
+var singerCopy = singer
+singerCopy.name = "Justin Bieber"
+print(singer.name, singerCopy.name)
+
+// 4. Classes can have deinitializers - code that gets run when an instance of a class is destroyed
+class destroyedPerson {
+    var name = "John Doe"
+    
+    init() {
+        print("\(name) is alive!")
+    }
+    
+    func printgreeting() {
+        print("Hello, I'm \(name)")
+    }
+    
+    deinit {
+        print("\(name) is dead.")
+    }
+}
+
+for _ in 1...3 {
+    let deadPerson = destroyedPerson()
+    deadPerson.printgreeting()
+}
+
+// 5. If you have a constant class with a variable property, that property can be changed (vs. a struct where the property can't be changed because the struct is constant)
+// Classes don't need the mutating keyword with methods that change properties - you only need that with structs
+// If you want to prevent this from happening, you can make the property a constant using let
+
+class newSinger {
+    var name = "Kazuha"
+}
+
+let myCrush = newSinger()
+myCrush.name = "Chaewon"
+print(myCrush.name)
