@@ -431,9 +431,127 @@ captureResult("NYC")
 // In Swift, you can design your own data types called Structs; they can be given their own variables, constants, and functions
 struct Sport {
     var name: String
+    var olympic: Bool
+    var olympicStatus: String {
+        if olympic {
+            return "\(name) is an Olympic Sport"
+        } else {
+            return "\(name) is not an Olympic Sport"
+        }
+    }
+}
+// var name: String is a stored property
+// var olympicStatus: String is a computed property as the property runs code to find a value
+var tennis = Sport(name: "Tennis", olympic: true)
+print(tennis.name)
+print(tennis.olympicStatus)
+
+// You can set up property observers that will run code before or after property changes
+struct Progress {
+    var task: String
+    var amount: Int {
+        didSet {
+            print("\(task) is now \(amount)% complete.")
+        }
+    }
 }
 
-var tennis = Sport(name: "Tennis")
-print(tennis.name)
+var progress = Progress(task: "Loading Data", amount: 0)
+progress.amount = 30
+progress.amount = 50
+progress.amount = 100
 
+// You can store methods inside structs as well (they are called methods but are still called with func)
+struct City {
+    var population: Int
+    
+    func collectTaxes() -> Int {
+        return population * 1000
+    }
+}
 
+var newYorkCity = City(population: 1000)
+newYorkCity.collectTaxes()
+
+// If a struct has a variable property but the instance of the struct was created as a constant, that property cannot be changed
+// The struct is constant so all of its properties are also constant!
+// Swift won't let you write methods that change properties unless you specifically request it using the mutating keyword
+struct Person {
+    var name: String
+    mutating func makeAnonymous() {
+        name = "Anonymous"
+    }
+}
+var person = Person(name: "Ed")
+person.makeAnonymous()
+print(person.name)
+
+// Similar to Python, you can have an initializer in the struct that starts an object with certain properties
+struct User {
+    var username: String
+    
+    init() {
+        username = "Anonymous"
+        print("Creating a new user!")
+    }
+}
+var user = User()
+user.username = "twostraws"
+print(user.username)
+
+// You can also use self to point to the isntance of the struct that is currently being used
+struct selfPerson {
+    var name: String
+    init(name: String) {
+        print("\(name) was born!")
+        self.name = name
+    }
+}
+var selfPeep = selfPerson(name: "Leo")
+
+// Lazy Properties - if we don't always need the property in a struct, you can label it as lazy so that it is only created when it is first accessed
+struct FamilyTree {
+    init() {
+        print("Creating family tree!")
+    }
+}
+
+struct lazyPerson {
+    var name: String
+    lazy var familyTree = FamilyTree()
+
+    init(name: String) {
+        self.name = name
+    }
+}
+
+var ed = lazyPerson(name: "Ed")
+ed.familyTree
+
+// You can make Swift share specific properties and methods across all instances of the struct by declaring them as static
+struct Student {
+    static var classSize = 0
+    var name: String
+
+    init(name: String) {
+        self.name = name
+        Student.classSize += 1
+    }
+}
+let student1 = Student(name: "Ed")
+let student2 = Student(name: "Taylor")
+print("Student Class Size:", Student.classSize)
+
+// You can use Private / Public keywords to prevent properties being read from outside of the struct
+struct privatePerson {
+    private var id: String
+    init(id: String) {
+        self.id = id
+    }
+    
+    func identify() -> String {
+        return "My id nubmer is \(id)"
+    }
+}
+let privateMan = privatePerson(id: "12345")
+privateMan.identify()
