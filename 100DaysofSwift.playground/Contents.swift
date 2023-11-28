@@ -738,3 +738,43 @@ struct protoExUser: newIdentifiable {
  
 let twostraws = protoExUser(id: "twostraws")
 twostraws.identify()
+
+// Day 12 - Optionals
+var age: Int? = nil
+age = 38
+
+// You must look inside the optional and see what's there -> this is called unwrapping
+// A common way of unwrapping optionals is with if let syntax, which unwraps with a condition - if there was a value inside the optional then you can use it, but if there wasn't the condition would fail
+var optionalName: String? = nil
+if let unwrapped = optionalName {
+    print("\(unwrapped.count) letters")
+} else {
+    print("Name is missing")
+}
+
+// An alternative is guard let, which also unwraps optionals -> guard let will unwrap an optional for you but if it finds nil inside, it expects you to exit the function, loop, or condition you used it in
+// The major difference between if let and guard let is that your unwrapped optional remains usable after the guard code
+func greet(_ optionalName: String?) {
+    guard let unwrapped = optionalName else {
+        print("You didn't provide a name!")
+        return
+    }
+    
+    print("Hello, \(unwrapped)")
+}
+greet(optionalName)
+
+// Swift lets you convert optionals to a non-optional type forcefully
+let str = "5"
+let num = Int(str)
+// The above makes num an optional Int because you might have tried to convert a string like "Fish" rather than "5"
+// Even though Swift isn't sure the conversion will work, you can see the code is safe so you can force unwrap the result by writing ! after Int(str)
+let forceNum = Int(str)!
+// This will force the num to be a regular Int rather than an Int? -> but if you're wrong, the code will crash
+// You should only force unwrap if you're sure it's safe
+
+// Implicitly unwrapped optionals might contain a value or they might be nil - however, unlike regular opt  ionals, you don't need to unwrap them in order to use them: you can use them as if they weren't optional at all
+let implicitAge: Int! = nil
+// You don't need if let or guard let to use implicitly unwrapped optinals - if you try to use them and they have no value -> they are nil
+// Implicitly unwrapped optionals exist because sometimes it's fine if a variable starts as nil
+
