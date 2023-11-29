@@ -778,3 +778,65 @@ let implicitAge: Int! = nil
 // You don't need if let or guard let to use implicitly unwrapped optinals - if you try to use them and they have no value -> they are nil
 // Implicitly unwrapped optionals exist because sometimes it's fine if a variable starts as nil
 
+// The nil coalescing operator unwraps an opotional and returns the value inside if there is one
+// If there isn't a value - if the optional was nil - then a default value is used instead
+// Either way, the result won't be optional: it will either be the value from inside the optional or the default value used as a backup
+func username(for id: Int) -> String? {
+    if id == 1 {
+        return "Taylor Swift"
+    } else {
+        return nil
+    }
+}
+
+let nilUser = username(for: 15) ?? "Anonymous"
+
+// You can use the ? operator as a shortcut for using optionals
+nilUser.first?.uppercased()
+
+// There are two alternatives to try -> the first is try? which will change throwing functions into functions that return an optional
+if let result = try? checkPassword("password") {
+    print("Result was \(result)")
+} else {
+    print("D'oh")
+}
+
+// The second alternative is try! which you can use when you know for sure that the function will not fail
+// If the function does throw an error, your code will crash
+try! checkPassword("secret")
+
+// You can create an initializer that might work or might not (failable initializer) -> you can write these using init?() and return nil is something goes wrong
+// The return value will then be optional of your type, for you to unwrap however you want
+
+struct failPerson {
+    var id: String
+    
+    init?(id: String) {
+        if id.count == 9 {
+            self.id = id
+        } else {
+            return nil
+        }
+    }
+}
+
+// Typecasting: Since Swift always needs to know the type of each variable, you can us as? keyword to return an optional -> it will be nil if the typecast failed or a converted type otherwise
+
+class Animal { }
+class Fish: Animal {
+    func makeNoise() {
+        print("Bloop!")
+    }
+}
+
+class typeDog: Animal {
+    func makeNoise() {
+        print("Woof!")
+    }
+}
+let pets = [Fish(), typeDog(), Fish(), typeDog()]
+for pet in pets {
+    if let dog = pet as? typeDog {
+        dog.makeNoise()
+    }
+}
