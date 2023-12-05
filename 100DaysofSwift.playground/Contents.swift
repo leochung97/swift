@@ -840,3 +840,24 @@ for pet in pets {
         dog.makeNoise()
     }
 }
+
+// Misc. Notes from SwiftUI
+// Returning some View means even though we don't know what view type is going back, the compiler does
+// Using some View is important for performance: SwiftUI needs to be able to look at the views we are showing and understand how they change -> it can correctly update the UI afterwards
+// If SwiftUI doesn't have this extra information, it would be slow for SwiftUI to figure out what changed -> it would need to ditch everything and start again after every small change
+// SwiftUI builds its data using ModifiedContent -> the View protocol has an associated type attached to it, which is Swift's way of saying that View by itself doesn't mean anything - we need to say exactly what kind of view it is
+
+// You're not allowed to write a view like this:
+struct ContentView: View {
+    var body: View {
+        Text("Hello, world!")
+    }
+}
+
+// You can write a view like this:
+struct ContentView: View {
+    var body: Text {
+        Text("Hello, world!")
+    }
+}
+// Returning View makes no sense because Swift wants to know what's inside the view -> returning Text is fine because we've filled the hole and Swift knows what the view is
